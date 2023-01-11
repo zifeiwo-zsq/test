@@ -15,7 +15,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 public class RemoteInterface {
-    private static final String API_KEY = "32134db58c6a3ab92c541fe7f3c53d2f";
+    private static final String API_KEY = "APP_KEY";
 
     public static String urlContent(String path){
         try {
