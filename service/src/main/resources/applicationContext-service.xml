@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+    <context:component-scan base-package="service"/>
+    <context:component-scan base-package="common"/>
+    <bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <tx:annotation-driven/>
+    <!--    配置线程池来执行定时任务
+        pool-size:线程池中线程的数量
+-->
+
+    <task:scheduler id="poolTaskScheduler" pool-size="2"></task:scheduler>
+
+    <!--    指定通过taskScheduler任务调度器线程池来对执行的任务按照各自的cron表达式执行
+            ref:引用spring容器中的对象
+    -->
+    <task:scheduled-tasks scheduler="poolTaskScheduler">
+        <task:scheduled ref="getRemoteApi" method="getCaiHongPi" cron="30 5/30 * * * ? "/>
+        <task:scheduled ref="getRemoteApi" method="getTianGou" cron="30 5/30 * * * ? "/>
+    </task:scheduled-tasks>
+</beans>
